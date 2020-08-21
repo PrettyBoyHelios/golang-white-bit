@@ -1,36 +1,35 @@
 package main
 
 import (
-	"encoding/json"
+	"fmt"
+	"github.com/PrettyBoyHelios/golang-white-bit/models"
 	"log"
+	"os"
 )
 
 func main() {
 
-	provider := Whitebit{
-		PublicKey: "",
-		SecretKey: "",
+	whitebit := models.Whitebit{
+		PublicKey: os.Getenv("WB_PUBLIC_KEY"),
+		SecretKey: os.Getenv("WB_PRIVATE_KEY"),
 		BaseURL:   "https://whitebit.com",
 	}
 
-	//put here request path. For obtaining trading balance use: /api/v4/trade-account/balance
-	request := "/api/v4/trade-account/balance"
-
-	//put here data to send
-	data := map[string]string{
-		"ticker": "BTC", //for example for obtaining trading balance for BTC currency
-	}
-
-	resultData, err := provider.SendRequest(request, data)
+	resultData, err := whitebit.MarketInfo()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var result interface{}
-	if err := json.Unmarshal(resultData, &result); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(resultData)
 
-	//printing response body to default output
-	log.Println(result)
+	resultWithdraw, err := whitebit.Withdraw(models.WithdrawParams{
+		Ticker:   "POLIS",
+		Amount:   "4",
+		Address:  "PjhsadasyuvbaJButHJvt",
+		Memo:     "test",
+		UniqueID: "728y73432",
+		Request:  "",
+		Nonce:    "83838",
+	})
+	fmt.Println(resultWithdraw)
 }

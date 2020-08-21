@@ -33,3 +33,5 @@ type MarketActivity struct {
 	QuoteVolume24H      string    `json:"quoteVolume24h"`
 	TradesEnabled       bool      `json:"tradesEnabled"`
 }
+
+type Withdrawal struct {}
